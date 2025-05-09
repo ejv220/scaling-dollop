@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费电子试玩网-小缘-国际站</title>
+    <style>
+        /* --- 可修改样式区域 --- */
+        :root {
+            --bg-color: linear-gradient(135deg, #00CED1 0%, #20B2AA 100%); /* 背景渐变颜色 */
+            --box-color: rgba(255, 255, 255, 0.9); /* 方块背景颜色 */
+            --box-size: 110px; /* 方块基础尺寸 */
+        }
+        /* --------------------- */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--box-size), 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .nav-box {
+            background: var(--box-color);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #2F4F4F;
+        }
+
+        .nav-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .add-panel {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .add-btn {
+            background: #FFA500;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #FF8C00;
+        }
+
+        /* 手机端适配 */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .nav-box {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>小缘.</h1>
+        
+        <!-- 导航方块显示区域 -->
+        <div class="grid" id="navGrid"></div>
+
+     
+    <script>
+        // ==============================================
+        // ★★★ 需要修改的位置 ★★★
+        // 在此处预置初始网站（格式：名称和URL）
+        let links = [
+            { name: '问鼎', url: 'https://wcwx.njxcggcj.com/app/register.php?site_id=1020&topId=6138171' },
+            { name: '多多', url: 'https://wcwx.njxcggcj.com/app/register.php?site_id=1021&topId=531916' },
+ 	{ name: '旺财', url: 'https://wcwx.njxcggcj.com/app/register.php?site_id=1012&topId=286230' },
+ 	{ name: 'NG体育', url: 'https://wcwx.njxcggcj.com/app/register.php?site_id=1019&topId=1383721&aPlanId=2&isAllProxy=1' },
+	{ name: 'PG模拟器', url: 'https://38.55.134.62:9062/pg%E8%AF%95%E7%8E%A9.html' },
+ 	{ name: '豪门', url: 'https://wcwx.njxcggcj.com/app/register.php?site_id=1008&topId=428079' },
+	{ name: '28圈', url: 'https://38.47.192.19:60007/#/link?allwin=2009382' },
+	{ name: '壹号', url: 'https://wcwx.njxcggcj.com/app/register.php?site_id=800&topId=591780' },
+            { name: '亿万', url: 'https://wcwx.njxcggcj.com/app/register.php?site_id=1017&topId=1081854' }
+        ];
+        // ==============================================
+
+        // 初始化导航方块
+        function renderNav() {
+            const grid = document.getElementById('navGrid');
+            grid.innerHTML = '';
+            
+            links.forEach((link, index) => {
+                const box = document.createElement('a');
+                box.className = 'nav-box';
+                box.href = link.url;
+                box.target = '_blank';
+                box.innerHTML = `
+                    <h3>${link.name}</h3>
+                    
+                `;
+                grid.appendChild(box);
+            });
+        }
+
+        // 显示添加表单
+        function showAddForm() {
+            const formHTML = `
+                <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                    background: white; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.2);">
+                    <h3 style="margin-bottom: 20px;">添加新网站</h3>
+                    <input type="text" id="newName" placeholder="网站名称" style="display: block; margin: 10px 0; padding: 8px; width: 100%;">
+                    <input type="url" id="newUrl" placeholder="网站地址 (包含http://)" style="display: block; margin: 10px 0; padding: 8px; width: 100%;">
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="addNewLink()" style="flex:1; padding: 8px; background: #00CED1; color: white; border: none; border-radius: 5px;">确认</button>
+                        <button onclick="closeForm()" style="flex:1; padding: 8px; background: #FF4500; color: white; border: none; border-radius: 5px;">取消</button>
+                    </div>
+                </div>
+            `;
+            
+            const formContainer = document.getElementById('addForm');
+            formContainer.innerHTML = formHTML;
+            formContainer.style.display = 'block';
+        }
+
+        // 添加新链接
+        function addNewLink() {
+            const name = document.getElementById('newName').value;
+            const url = document.getElementById('newUrl').value;
+            
+            if (!name || !url) {
+                alert('请填写完整信息');
+                return;
+            }
+            
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('网址需要以 http:// 或 https:// 开头');
+                return;
+            }
+
+            links.push({ name, url });
+            renderNav();
+            closeForm();
+            localStorage.setItem('navLinks', JSON.stringify(links));
+        }
+
+      
+        // 关闭表单
+        function closeForm() {
+            document.getElementById('addForm').style.display = 'none';
+        }
+
+        // 初始化加载
+        window.onload = function() {
+            // 尝试加载本地存储
+            const savedLinks = localStorage.getItem('navLinks');
+            if (savedLinks) links = JSON.parse(savedLinks);
+            renderNav();
+        }
+    </script>
+</body>
+</html>
